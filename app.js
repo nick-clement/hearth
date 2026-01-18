@@ -871,6 +871,72 @@ function Hearth() {
           </div>
         </>
       )}
+
+      {/* Footer */}
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <div className="footer-logo">
+              <Logo />
+            </div>
+            <p className="footer-tagline">
+              Private home-swapping network for friends and trusted connections. 
+              Stay in homes you trust, with people you know.
+            </p>
+            <div className="footer-social">
+              <div className="social-icon">
+                <Icon name="facebook" />
+              </div>
+              <div className="social-icon">
+                <Icon name="twitter" />
+              </div>
+              <div className="social-icon">
+                <Icon name="instagram" />
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-section">
+            <h4>Company</h4>
+            <div className="footer-links">
+              <a className="footer-link">About</a>
+              <a className="footer-link">How it works</a>
+              <a className="footer-link">Blog</a>
+              <a className="footer-link">Careers</a>
+              <a className="footer-link">Press</a>
+            </div>
+          </div>
+
+          <div className="footer-section">
+            <h4>Support</h4>
+            <div className="footer-links">
+              <a className="footer-link">Help Centre</a>
+              <a className="footer-link">Trust & Safety</a>
+              <a className="footer-link">Contact us</a>
+              <a className="footer-link">FAQs</a>
+            </div>
+          </div>
+
+          <div className="footer-section">
+            <h4>Legal</h4>
+            <div className="footer-links">
+              <a className="footer-link">Terms of Service</a>
+              <a className="footer-link">Privacy Policy</a>
+              <a className="footer-link">Cookie Policy</a>
+              <a className="footer-link">Community Guidelines</a>
+            </div>
+          </div>
+        </div>
+
+        <div className="footer-bottom">
+          <div>© 2026 Hearth. All rights reserved.</div>
+          <div className="footer-bottom-links">
+            <a>Sitemap</a>
+            <a>Accessibility</a>
+            <a>Do not sell my info</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
