@@ -18,6 +18,8 @@ function Hearth() {
   const [bookmarked, setBookmarked] = useState(new Set([2]));
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [showMyProfile, setShowMyProfile] = useState(false);
+  const [showFriends, setShowFriends] = useState(false);
 
   const toggleBookmark = (id) => {
     const newBookmarked = new Set(bookmarked);
@@ -817,6 +819,29 @@ function Hearth() {
             </div>
           </div>
         </div>
+        
+        <div className="how-it-works">
+          <div className="how-it-works-inner">
+            <h2 className="how-it-works-title">How it works</h2>
+            <div className="how-steps">
+              <div className="how-step">
+                <div className="step-number">1</div>
+                <h3 className="step-title">List your home</h3>
+                <p className="step-description">Add your property with photos, availability, and house details</p>
+              </div>
+              <div className="how-step">
+                <div className="step-number">2</div>
+                <h3 className="step-title">Find matches</h3>
+                <p className="step-description">See friends whose dates overlap with yours for a simultaneous swap</p>
+              </div>
+              <div className="how-step">
+                <div className="step-number">3</div>
+                <h3 className="step-title">Swap homes</h3>
+                <p className="step-description">Enjoy each other's spaces knowing they're well cared for by friends</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
@@ -858,28 +883,28 @@ function Hearth() {
           <h3 className="section-title">Property Details</h3>
           <div className="essentials-grid">
             <div className="essential-item">
-              <div className="essential-icon">🛏️</div>
+              <div className="essential-icon"><MaterialIcon name="bed" size="24" /></div>
               <div className="essential-content">
                 <div className="essential-label">Bedrooms</div>
                 <div className="essential-value">{myProperty.bedrooms}</div>
               </div>
             </div>
             <div className="essential-item">
-              <div className="essential-icon">🚿</div>
+              <div className="essential-icon"><MaterialIcon name="bathtub" size="24" /></div>
               <div className="essential-content">
                 <div className="essential-label">Bathrooms</div>
                 <div className="essential-value">{myProperty.bathrooms}</div>
               </div>
             </div>
             <div className="essential-item">
-              <div className="essential-icon">📏</div>
+              <div className="essential-icon"><MaterialIcon name="square_foot" size="24" /></div>
               <div className="essential-content">
                 <div className="essential-label">Square Feet</div>
                 <div className="essential-value">{myProperty.sqFootage} sq ft</div>
               </div>
             </div>
             <div className="essential-item">
-              <div className="essential-icon">🚗</div>
+              <div className="essential-icon"><MaterialIcon name="directions_car" size="24" /></div>
               <div className="essential-content">
                 <div className="essential-label">Parking</div>
                 <div className="essential-value">{myProperty.essentials.parking}</div>
@@ -1222,8 +1247,18 @@ function Hearth() {
             <HearthLogo />
           </div>
           <div className="header-actions">
-            <span className="network-info">12 friends</span>
-            <div className="user-badge">JD</div>
+            <span 
+              className="network-info"
+              onClick={() => setShowFriends(true)}
+            >
+              12 friends
+            </span>
+            <div 
+              className="user-badge"
+              onClick={() => setShowMyProfile(true)}
+            >
+              JD
+            </div>
           </div>
         </div>
       </header>

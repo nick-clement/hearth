@@ -1038,3 +1038,122 @@ h1, h2, h3, h4, h5, h6 {
     padding: 24px;
   }
 }
+/* Fix My Place page emoji icons - replace with Material Icons */
+.essential-icon {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.essential-icon .material-icons {
+  font-size: 24px;
+  color: #1a1a1a;
+}
+
+/* Fix grid - ensure 3 columns always */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+@media (max-width: 1200px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Make user badge clickable with hover state */
+.user-badge {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.user-badge:hover {
+  opacity: 0.8;
+}
+
+/* Make network info clickable */
+.network-info {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.network-info:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+/* How it Works section */
+.how-it-works {
+  background: #f8f8f8;
+  padding: 80px 40px;
+  margin-top: 80px;
+}
+
+.how-it-works-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.how-it-works-title {
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 48px;
+  text-align: center;
+  color: #1a1a1a;
+}
+
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+}
+
+.how-step {
+  text-align: center;
+}
+
+.step-number {
+  width: 48px;
+  height: 48px;
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0 auto 20px;
+}
+
+.step-title {
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: 12px;
+  color: #1a1a1a;
+}
+
+.step-description {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.6;
+}
+
+@media (max-width: 968px) {
+  .how-steps {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
