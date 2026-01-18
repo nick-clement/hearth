@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hearth Test</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const HearthLogo = () => (
+      <svg width="107" height="15" viewBox="0 0 428 59" fill="none">
+        <path d="M-5.30481e-06 58.884V-2.38419e-07H7.30799V25.62H37.716V-2.38419e-07H45.024V58.884H37.716V32.34H7.30799V58.884H-5.30481e-06Z" fill="currentColor"/>
+      </svg>
+    );
+    
+    function Test() {
+      return (
+        <div style={{padding: '40px'}}>
+          <h1>Hearth Test</h1>
+          <HearthLogo />
+          <p>If you see the logo above, React is working!</p>
+          <span className="material-icons">star</span>
+          <p>If you see a star icon above, Material Icons are working!</p>
+        </div>
+      );
+    }
+    
+    ReactDOM.render(<Test />, document.getElementById('root'));
+  </script>
+</body>
+</html>

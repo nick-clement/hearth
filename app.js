@@ -684,16 +684,6 @@ function Hearth() {
 
   const matches = allProperties.filter(p => p.matchScore > 0);
 
-  const toggleBookmark = (id) => {
-    const newBookmarked = new Set(bookmarked);
-    if (newBookmarked.has(id)) {
-      newBookmarked.delete(id);
-    } else {
-      newBookmarked.add(id);
-    }
-    setBookmarked(newBookmarked);
-  };
-
   const MatchCard = ({ match, isMatch = true }) => (
     <article className="match-card" style={{ animationDelay: `${match.id * 100}ms` }}>
       <div 
