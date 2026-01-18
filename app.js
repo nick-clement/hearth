@@ -1,15 +1,29 @@
 const { useState } = React;
 
-// Logo SVG Component
-const HearthLogo = () => (
-  <svg width="107" height="15" viewBox="0 0 428 59" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M-5.30481e-06 58.884V-2.38419e-07H7.30799V25.62H37.716V-2.38419e-07H45.024V58.884H37.716V32.34H7.30799V58.884H-5.30481e-06ZM81.6375 58.884V0.0839987H119.101V6.804H88.9455V25.62H114.061V32.34H88.9455V52.164H120.193V58.884H81.6375ZM156.367 58.884H148.807L171.235 0.0839987H179.887L202.231 58.884H194.419L188.203 43.008H162.583L156.367 58.884ZM175.351 8.064L164.767 36.372H186.019L175.351 8.064ZM234.084 0.0839987H256.596C268.272 0.0839987 276.168 7.224 276.168 18.144C276.168 26.292 271.296 32.76 263.652 34.86L276.84 58.884H268.608L256.428 36.288H241.392V58.884H234.084V0.0839987ZM241.392 6.804V29.568H256.008C263.736 29.568 268.692 25.116 268.692 18.144C268.692 11.34 263.736 6.804 256.092 6.804H241.392ZM303.825 6.804V0.0839987H349.269V6.804H330.201V58.884H322.893V6.804H303.825ZM382.266 58.884V-2.38419e-07H389.574V25.62H419.982V-2.38419e-07H427.29V58.884H419.982V32.34H389.574V58.884H382.266Z" fill="currentColor"/>
+// Simple SVG icons as components
+const HomeIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+    <polyline points="9 22 9 12 15 12 15 22"/>
   </svg>
 );
 
-// Material Icon Component  
-const MaterialIcon = ({ name, size = "24" }) => (
-  <span className="material-icons" style={{ fontSize: `${size}px` }}>{name}</span>
+const StarIcon = ({ fill }) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill={fill ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+);
+
+const StarFilledIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
 );
 
 function Hearth() {
@@ -18,18 +32,6 @@ function Hearth() {
   const [bookmarked, setBookmarked] = useState(new Set([2]));
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedProperty, setSelectedProperty] = useState(null);
-  const [showMyProfile, setShowMyProfile] = useState(false);
-  const [showFriends, setShowFriends] = useState(false);
-
-  const toggleBookmark = (id) => {
-    const newBookmarked = new Set(bookmarked);
-    if (newBookmarked.has(id)) {
-      newBookmarked.delete(id);
-    } else {
-      newBookmarked.add(id);
-    }
-    setBookmarked(newBookmarked);
-  };
 
   const userProfiles = {
     1: {
@@ -686,6 +688,16 @@ function Hearth() {
 
   const matches = allProperties.filter(p => p.matchScore > 0);
 
+  const toggleBookmark = (id) => {
+    const newBookmarked = new Set(bookmarked);
+    if (newBookmarked.has(id)) {
+      newBookmarked.delete(id);
+    } else {
+      newBookmarked.add(id);
+    }
+    setBookmarked(newBookmarked);
+  };
+
   const MatchCard = ({ match, isMatch = true }) => (
     <article className="match-card" style={{ animationDelay: `${match.id * 100}ms` }}>
       <div 
@@ -700,11 +712,11 @@ function Hearth() {
           }}
           className={`bookmark-btn ${bookmarked.has(match.id) ? 'active' : ''}`}
         >
-          <MaterialIcon name={bookmarked.has(match.id) ? "star" : "star_border"} size="18" />
+          <StarIcon fill={bookmarked.has(match.id)} />
         </button>
         {isMatch && (
           <div className="match-badge">
-            <MaterialIcon name="check" size="14" />
+            <CheckIcon />
             {match.matchScore}% Match
           </div>
         )}
@@ -819,29 +831,6 @@ function Hearth() {
             </div>
           </div>
         </div>
-        
-        <div className="how-it-works">
-          <div className="how-it-works-inner">
-            <h2 className="how-it-works-title">How it works</h2>
-            <div className="how-steps">
-              <div className="how-step">
-                <div className="step-number">1</div>
-                <h3 className="step-title">List your home</h3>
-                <p className="step-description">Add your property with photos, availability, and house details</p>
-              </div>
-              <div className="how-step">
-                <div className="step-number">2</div>
-                <h3 className="step-title">Find matches</h3>
-                <p className="step-description">See friends whose dates overlap with yours for a simultaneous swap</p>
-              </div>
-              <div className="how-step">
-                <div className="step-number">3</div>
-                <h3 className="step-title">Swap homes</h3>
-                <p className="step-description">Enjoy each other's spaces knowing they're well cared for by friends</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     );
   };
@@ -883,28 +872,28 @@ function Hearth() {
           <h3 className="section-title">Property Details</h3>
           <div className="essentials-grid">
             <div className="essential-item">
-              <div className="essential-icon"><MaterialIcon name="bed" size="24" /></div>
+              <div className="essential-icon">🛏️</div>
               <div className="essential-content">
                 <div className="essential-label">Bedrooms</div>
                 <div className="essential-value">{myProperty.bedrooms}</div>
               </div>
             </div>
             <div className="essential-item">
-              <div className="essential-icon"><MaterialIcon name="bathtub" size="24" /></div>
+              <div className="essential-icon">🚿</div>
               <div className="essential-content">
                 <div className="essential-label">Bathrooms</div>
                 <div className="essential-value">{myProperty.bathrooms}</div>
               </div>
             </div>
             <div className="essential-item">
-              <div className="essential-icon"><MaterialIcon name="square_foot" size="24" /></div>
+              <div className="essential-icon">📏</div>
               <div className="essential-content">
                 <div className="essential-label">Square Feet</div>
                 <div className="essential-value">{myProperty.sqFootage} sq ft</div>
               </div>
             </div>
             <div className="essential-item">
-              <div className="essential-icon"><MaterialIcon name="directions_car" size="24" /></div>
+              <div className="essential-icon">🚗</div>
               <div className="essential-content">
                 <div className="essential-label">Parking</div>
                 <div className="essential-value">{myProperty.essentials.parking}</div>
@@ -975,7 +964,7 @@ function Hearth() {
             Reviews from friends
             <span className="reviews-rating">
               {Array(5).fill(0).map((_, i) => (
-                <MaterialIcon name="star" size="16" key={i} />
+                <StarFilledIcon key={i} />
               ))}
               <span className="rating-text">5.0 · {myProperty.reviews.length} reviews</span>
             </span>
@@ -991,7 +980,7 @@ function Hearth() {
                   </div>
                   <div className="review-stars">
                     {Array(review.rating).fill(0).map((_, i) => (
-                      <MaterialIcon name="star" size="16" key={i} />
+                      <StarFilledIcon key={i} />
                     ))}
                   </div>
                 </div>
@@ -1142,7 +1131,7 @@ function Hearth() {
             <div className="detail-header">
               {property.matchScore > 0 && (
                 <div className="detail-match-tag">
-                  <MaterialIcon name="check" size="14" /> {property.matchScore}% Match · {property.overlap}
+                  <CheckIcon /> {property.matchScore}% Match · {property.overlap}
                 </div>
               )}
               <h1 className="detail-title">{property.property}</h1>
@@ -1244,21 +1233,12 @@ function Hearth() {
       <header className="site-header">
         <div className="header-inner">
           <div className="brand">
-            <HearthLogo />
+            <HomeIcon />
+            <h1 className="brand-name">Hearth</h1>
           </div>
           <div className="header-actions">
-            <span 
-              className="network-info"
-              onClick={() => setShowFriends(true)}
-            >
-              12 friends
-            </span>
-            <div 
-              className="user-badge"
-              onClick={() => setShowMyProfile(true)}
-            >
-              JD
-            </div>
+            <span className="network-info">12 friends</span>
+            <div className="user-badge">JD</div>
           </div>
         </div>
       </header>
