@@ -335,7 +335,103 @@ function Hearth() {
   const [showGallery, setShowGallery] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [authTab, setAuthTab] = useState('login');
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Logged out by default - shows login/signup buttons
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [dbProperties, setDbProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userProfile, setUserProfile] = useState(null);
+
+  // Load properties from database
+  React.useEffect(() => {
+    async function loadProperties() {
+      if (!getSupabase()) {
+        console.log('Using fallback properties');
+        setDbProperties(properties);
+        setLoading(false);
+        return;
+      }
+
+      const supabase = getSupabase();
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*, owner:profiles!owner_id(*), availability:property_availability(*)')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading properties:', error);
+        setDbProperties(properties); // Fallback to hardcoded
+      } else {
+        // Transform database format to match app format
+        const transformed = data.map(prop => ({
+          id: prop.id,
+          name: prop.name,
+          location: prop.location,
+          image: prop.images?.[0] || 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800',
+          images: prop.images || [],
+          bedrooms: prop.bedrooms,
+          description: prop.description,
+          amenities: prop.amenities || [],
+          availableDates: (prop.availability || []).map(a => ({
+            start: a.start_date,
+            end: a.end_date
+          })),
+          neighborhood: {
+            description: `Explore ${prop.location} and surrounding areas.`,
+            nearby: []
+          },
+          owner: {
+            name: prop.owner?.full_name || 'Host',
+            location: prop.owner?.location || prop.location,
+            avatar: prop.owner?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${prop.owner?.email}`,
+            email: prop.owner?.email || '',
+            bio: prop.owner?.bio || '',
+            connection: 'friend'
+          }
+        }));
+        setDbProperties(transformed);
+      }
+      setLoading(false);
+    }
+
+    loadProperties();
+  }, []);
+
+  // Load user profile
+  React.useEffect(() => {
+    async function loadUserProfile() {
+      if (isLoggedIn && authHelpers) {
+        const user = await authHelpers.getCurrentUser();
+        if (user) {
+          const supabase = getSupabase();
+          if (supabase) {
+            const { data } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', user.id)
+              .single();
+            
+            if (data) {
+              setUserProfile({
+                name: data.full_name || 'You',
+                location: data.location || 'Add your location',
+                avatar: data.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
+                email: user.email,
+                bio: data.bio || 'Tell us about yourself...',
+                properties: 0,
+                swaps: 0,
+                reviews: 0,
+                friends: 0
+              });
+            }
+          }
+        }
+      }
+    }
+    
+    loadUserProfile();
+  }, [isLoggedIn]);
+
+  // Use database properties or fallback
+  const displayProperties = dbProperties.length > 0 ? dbProperties : properties;
 
   const handleSearch = () => {
     setView('results');
@@ -356,9 +452,9 @@ function Hearth() {
 
   // Filter properties by search dates
   const getMatchingProperties = () => {
-    if (!searchDates.start || !searchDates.end) return properties;
+    if (!searchDates.start || !searchDates.end) return displayProperties;
     
-    return properties.map(prop => {
+    return displayProperties.map(prop => {
       const matchingDate = prop.availableDates.find(avail => 
         datesOverlap(searchDates.start, searchDates.end, avail.start, avail.end)
       );
@@ -395,11 +491,14 @@ function Hearth() {
                     await authHelpers.signOut();
                   }
                   setIsLoggedIn(false);
+                  setUserProfile(null);
                 }}>
                   Log out
                 </button>
-                <div className="user-avatar" onClick={() => openUserPanel(myProfile)}>
-                  YO
+                <div className="user-avatar" onClick={() => openUserPanel(userProfile || myProfile)}>
+                  {userProfile?.avatar ? (
+                    <img src={userProfile.avatar} alt={userProfile.name} style={{width: '100%', height: '100%', borderRadius: '50%'}} />
+                  ) : 'YO'}
                 </div>
               </>
             ) : (
@@ -460,31 +559,37 @@ function Hearth() {
           <h2 style={{marginBottom: '32px', fontSize: '24px', fontWeight: 400}}>
             Featured homes from your circle
           </h2>
-          <div className="properties-grid">
-            {properties.slice(0, 6).map(property => (
-              <div 
-                key={property.id} 
-                className="property-card"
-                onClick={() => openProperty(property)}
-              >
-                <img src={property.image} alt={property.name} className="property-image" />
-                <div className="connection-badge">
-                  {property.owner.connection === 'friend' ? (
-                    <><Icon name="check_circle" /> Friend</>
-                  ) : (
-                    <><Icon name="people" /> {property.owner.mutualFriends} mutual friends</>
-                  )}
+          {loading ? (
+            <div style={{textAlign: 'center', padding: '40px'}}>
+              <p>Loading properties...</p>
+            </div>
+          ) : (
+            <div className="properties-grid">
+              {displayProperties.slice(0, 6).map(property => (
+                <div 
+                  key={property.id} 
+                  className="property-card"
+                  onClick={() => openProperty(property)}
+                >
+                  <img src={property.image} alt={property.name} className="property-image" />
+                  <div className="connection-badge">
+                    {property.owner.connection === 'friend' ? (
+                      <><Icon name="check_circle" /> Friend</>
+                    ) : (
+                      <><Icon name="people" /> {property.owner.mutualFriends} mutual friends</>
+                    )}
+                  </div>
+                  <h3 className="property-title">{property.name}</h3>
+                  <p className="property-location">{property.location}</p>
+                  <p className="property-info">{property.bedrooms} bedrooms</p>
+                  <div className="card-owner">
+                    <img src={property.owner.avatar} alt={property.owner.name} className="card-owner-avatar" />
+                    <span className="card-owner-name">{property.owner.name}</span>
+                  </div>
                 </div>
-                <h3 className="property-title">{property.name}</h3>
-                <p className="property-location">{property.location}</p>
-                <p className="property-info">{property.bedrooms} bedrooms</p>
-                <div className="card-owner">
-                  <img src={property.owner.avatar} alt={property.owner.name} className="card-owner-avatar" />
-                  <span className="card-owner-name">{property.owner.name}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
