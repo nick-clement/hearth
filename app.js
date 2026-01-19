@@ -4,79 +4,34 @@
 const SUPABASE_URL = 'https://fiebezfcygegwkwpiccw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZWJlemZjeWdlZ3drd3BpY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3NjA3MzEsImV4cCI6MjA4NDMzNjczMX0.v8YvtEA5Dx-oxzyXG_2KJIGMIZUz2PEBzEWNKwl5gqQ';
 
-// Function to get or create Supabase client
-function getSupabase() {
-  if (typeof window.supabase === 'undefined') {
-    console.error('Supabase SDK not loaded');
-    return null;
-  }
-  // Create client lazily when first accessed
-  if (!window._supabaseClient) {
-    window._supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-  return window._supabaseClient;
+// Initialize Supabase (will be null if SDK not loaded yet)
+let supabase = null;
+if (typeof window !== 'undefined' && window.supabase) {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
 
-// Auth helpers - get client when called
-const authHelpers = {
+// Auth helpers (only if supabase is initialized)
+const authHelpers = supabase ? {
   async signUp(email, password, fullName) {
-    const supabase = getSupabase();
-    if (!supabase) return { data: null, error: { message: 'Supabase not initialized' } };
-    
     const { data, error } = await supabase.auth.signUp({
-      email, 
-      password,
+      email, password,
       options: { data: { full_name: fullName } }
     });
     return { data, error };
   },
-  
   async signIn(email, password) {
-    const supabase = getSupabase();
-    if (!supabase) return { data: null, error: { message: 'Supabase not initialized' } };
-    
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     return { data, error };
   },
-  
   async signOut() {
-    const supabase = getSupabase();
-    if (!supabase) return { error: { message: 'Supabase not initialized' } };
-    
     const { error } = await supabase.auth.signOut();
     return { error };
   },
-  
   async getCurrentUser() {
-    const supabase = getSupabase();
-    if (!supabase) return null;
-    
     const { data: { user } } = await supabase.auth.getUser();
     return user;
-  },
-  
-  async signInWithGoogle() {
-    const supabase = getSupabase();
-    if (!supabase) return { data: null, error: { message: 'Supabase not initialized' } };
-    
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin }
-    });
-    return { data, error };
-  },
-  
-  async signInWithFacebook() {
-    const supabase = getSupabase();
-    if (!supabase) return { data: null, error: { message: 'Supabase not initialized' } };
-    
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'facebook',
-      options: { redirectTo: window.location.origin }
-    });
-    return { data, error };
   }
-};
+} : null;
 
 // ========================================
 // ORIGINAL APP CODE BELOW
@@ -566,13 +521,20 @@ function Hearth() {
             <h2 style={{marginBottom: '32px', fontSize: '32px', fontWeight: 400}}>
               Available homes ({matchingProperties.filter(p => p.matchingDate).length} matches)
             </h2>
-            <div className="properties-grid">
-              {matchingProperties.map(property => (
-                <div 
-                  key={property.id} 
-                  className="property-card"
-                  onClick={() => openProperty(property)}
-                >
+            {matchingProperties.filter(p => p.matchingDate).length === 0 ? (
+              <div style={{textAlign: 'center', padding: '60px 20px', color: '#666'}}>
+                <Icon name="event_busy" style={{fontSize: '64px', marginBottom: '16px'}} />
+                <h3 style={{fontSize: '24px', fontWeight: 400, marginBottom: '12px'}}>No homes available for your dates</h3>
+                <p>Try different dates or adjust your search</p>
+              </div>
+            ) : (
+              <div className="properties-grid">
+                {matchingProperties.filter(p => p.matchingDate).map(property => (
+                  <div 
+                    key={property.id} 
+                    className="property-card"
+                    onClick={() => openProperty(property)}
+                  >
                   <img src={property.image} alt={property.name} className="property-image" />
                   <div className="connection-badge">
                     {property.owner.connection === 'friend' ? (
@@ -606,6 +568,7 @@ function Hearth() {
                 </div>
               ))}
             </div>
+            )}
           </div>
         </div>
       )}
