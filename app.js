@@ -335,7 +335,7 @@ function Hearth() {
   const [showGallery, setShowGallery] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [authTab, setAuthTab] = useState('login');
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Set to false to show login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Logged out by default - shows login/signup buttons
 
   const handleSearch = () => {
     setView('results');
@@ -390,6 +390,14 @@ function Hearth() {
                 <a className="nav-link" onClick={() => setShowInvite(true)}>
                   <Icon name="person_add" /> Invite friends
                 </a>
+                <button className="login-btn" onClick={async () => {
+                  if (authHelpers) {
+                    await authHelpers.signOut();
+                  }
+                  setIsLoggedIn(false);
+                }}>
+                  Log out
+                </button>
                 <div className="user-avatar" onClick={() => openUserPanel(myProfile)}>
                   YO
                 </div>
