@@ -443,7 +443,7 @@ function Hearth() {
             Featured homes from your circle
           </h2>
           <div className="properties-grid">
-            {properties.slice(0, 6).map(property => (
+            {dbProperties.slice(0, 6).map(property => (
               <div 
                 key={property.id} 
                 className="property-card"
@@ -501,10 +501,10 @@ function Hearth() {
 
           <div className="container">
             <h2 style={{marginBottom: '32px', fontSize: '32px', fontWeight: 400}}>
-              Available homes ({matchingProperties.filter(p => p.matchingDate).length} matches)
+              Available homes ({dbProperties.length} total)
             </h2>
             <div className="properties-grid">
-              {matchingProperties.map(property => (
+              {dbProperties.map(property => (
                 <div 
                   key={property.id} 
                   className="property-card"
@@ -526,16 +526,6 @@ function Hearth() {
                   <h3 className="property-title">{property.name}</h3>
                   <p className="property-location">{property.location}</p>
                   <p className="property-info">{property.bedrooms} bedrooms</p>
-                  {property.matchingDate ? (
-                    <div className="availability-tag">
-                      <Icon name="event_available" /> 
-                      Available {formatDateRange(property.matchingDate.start, property.matchingDate.end)}
-                    </div>
-                  ) : (
-                    <div className="availability-tag no-match">
-                      <Icon name="event_busy" /> Not available your dates
-                    </div>
-                  )}
                   <div className="card-owner">
                     <img src={property.owner.avatar} alt={property.owner.name} className="card-owner-avatar" />
                     <span className="card-owner-name">{property.owner.name}</span>
