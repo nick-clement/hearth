@@ -1,87 +1,12 @@
-// ========================================
-// SUPABASE CONFIGURATION
-// ========================================
+const { useState } = React;
+
+// Supabase
 const SUPABASE_URL = 'https://fiebezfcygegwkwpiccw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZWJlemZjeWdlZ3drd3BpY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3NjA3MzEsImV4cCI6MjA4NDMzNjczMX0.v8YvtEA5Dx-oxzyXG_2KJIGMIZUz2PEBzEWNKwl5gqQ';
-
-// Function to get or create Supabase client
-function getSupabase() {
-  if (typeof window === 'undefined' || typeof window.supabase === 'undefined') {
-    console.error('Supabase SDK not loaded');
-    return null;
-  }
-  // Create client lazily when first accessed
-  if (!window._supabaseClient) {
-    window._supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-  return window._supabaseClient;
+let supabase = null;
+if (typeof window !== 'undefined' && window.supabase) {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 }
-
-// Auth helpers - get client when called
-const authHelpers = {
-  async signUp(email, password, fullName) {
-    const supabase = getSupabase();
-    if (!supabase) return { data: null, error: { message: 'Supabase not initialized' } };
-    
-    const { data, error } = await supabase.auth.signUp({
-      email, 
-      password,
-      options: { data: { full_name: fullName } }
-    });
-    return { data, error };
-  },
-  
-  async signIn(email, password) {
-    const supabase = getSupabase();
-    if (!supabase) return { data: null, error: { message: 'Supabase not initialized' } };
-    
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    return { data, error };
-  },
-  
-  async signOut() {
-    const supabase = getSupabase();
-    if (!supabase) return { error: { message: 'Supabase not initialized' } };
-    
-    const { error } = await supabase.auth.signOut();
-    return { error };
-  },
-  
-  async getCurrentUser() {
-    const supabase = getSupabase();
-    if (!supabase) return null;
-    
-    const { data: { user } } = await supabase.auth.getUser();
-    return user;
-  },
-  
-  async signInWithGoogle() {
-    const supabase = getSupabase();
-    if (!supabase) return { data: null, error: { message: 'Supabase not initialized' } };
-    
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.location.origin }
-    });
-    return { data, error };
-  },
-  
-  async signInWithFacebook() {
-    const supabase = getSupabase();
-    if (!supabase) return { data: null, error: { message: 'Supabase not initialized' } };
-    
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'facebook',
-      options: { redirectTo: window.location.origin }
-    });
-    return { data, error };
-  }
-};
-
-// ========================================
-// ORIGINAL APP CODE BELOW
-// ========================================
-const { useState } = React;
 
 // Material Icon Component
 const Icon = ({ name, className = "" }) => <span className={`material-icons ${className}`}>{name}</span>;
@@ -380,127 +305,27 @@ function Hearth() {
   const [showGallery, setShowGallery] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [authTab, setAuthTab] = useState('login');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [dbProperties, setDbProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [userProfile, setUserProfile] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [dbProperties, setDbProperties] = useState(properties);
 
-  // Load properties from database
   React.useEffect(() => {
-    async function loadProperties() {
-      console.log('Starting to load properties...');
-      
-      const supabase = getSupabase();
-      if (!supabase) {
-        console.log('Supabase not available, using fallback properties');
-        setDbProperties(properties);
-        setLoading(false);
-        return;
-      }
-
-      console.log('Fetching from Supabase...');
-      try {
-        const { data, error } = await supabase
-          .from('properties')
-          .select('*, owner:profiles!owner_id(*), availability:property_availability(*)')
-          .order('created_at', { ascending: false });
-
-        console.log('Supabase response:', { data, error });
-
-        if (error) {
-          console.error('Error loading properties:', error);
-          setDbProperties(properties); // Fallback to hardcoded
-          setLoading(false);
-          return;
+    if (supabase) {
+      supabase.from('properties').select('*, owner:profiles!owner_id(*)').then(({ data }) => {
+        if (data) {
+          setDbProperties(data.map(p => ({
+            id: p.id, name: p.name, location: p.location,
+            image: p.images?.[0] || '', images: p.images || [],
+            bedrooms: p.bedrooms, description: p.description || '',
+            amenities: p.amenities || [], availableDates: [],
+            neighborhood: { description: '', nearby: [] },
+            owner: { name: p.owner?.full_name || 'Host', location: p.owner?.location || p.location,
+              avatar: p.owner?.avatar_url || 'https://i.pravatar.cc/150?img=1',
+              email: p.owner?.email || '', bio: p.owner?.bio || '', connection: 'friend' }
+          })));
         }
-
-        if (!data || data.length === 0) {
-          console.log('No properties in database, using fallback');
-          setDbProperties(properties);
-          setLoading(false);
-          return;
-        }
-
-        console.log(`Loaded ${data.length} properties from database`);
-        
-        // Transform database format to match app format
-        const transformed = data.map(prop => ({
-          id: prop.id,
-          name: prop.name,
-          location: prop.location,
-          image: prop.images?.[0] || 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800',
-          images: prop.images || [],
-          bedrooms: prop.bedrooms,
-          description: prop.description,
-          amenities: prop.amenities || [],
-          availableDates: (prop.availability || []).map(a => ({
-            start: a.start_date,
-            end: a.end_date
-          })),
-          neighborhood: {
-            description: `Explore ${prop.location} and surrounding areas.`,
-            nearby: []
-          },
-          owner: {
-            name: prop.owner?.full_name || 'Host',
-            location: prop.owner?.location || prop.location,
-            avatar: prop.owner?.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${prop.owner?.email}`,
-            email: prop.owner?.email || '',
-            bio: prop.owner?.bio || '',
-            connection: 'friend'
-          }
-        }));
-        
-        console.log('Transformed properties:', transformed);
-        setDbProperties(transformed);
-        setLoading(false);
-      } catch (err) {
-        console.error('Exception loading properties:', err);
-        setDbProperties(properties);
-        setLoading(false);
-      }
+      });
     }
-
-    loadProperties();
   }, []);
-
-  // Load user profile
-  React.useEffect(() => {
-    async function loadUserProfile() {
-      if (isLoggedIn && authHelpers) {
-        const user = await authHelpers.getCurrentUser();
-        if (user) {
-          const supabase = getSupabase();
-          if (supabase) {
-            const { data } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', user.id)
-              .single();
-            
-            if (data) {
-              setUserProfile({
-                name: data.full_name || 'You',
-                location: data.location || 'Add your location',
-                avatar: data.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`,
-                email: user.email,
-                bio: data.bio || 'Tell us about yourself...',
-                properties: 0,
-                swaps: 0,
-                reviews: 0,
-                friends: 0
-              });
-            }
-          }
-        }
-      }
-    }
-    
-    loadUserProfile();
-  }, [isLoggedIn]);
-
-  // Use database properties or fallback
-  const displayProperties = dbProperties.length > 0 ? dbProperties : properties;
 
   const handleSearch = () => {
     setView('results');
@@ -521,9 +346,9 @@ function Hearth() {
 
   // Filter properties by search dates
   const getMatchingProperties = () => {
-    if (!searchDates.start || !searchDates.end) return displayProperties;
+    if (!searchDates.start || !searchDates.end) return dbProperties;
     
-    return displayProperties.map(prop => {
+    return dbProperties.map(prop => {
       const matchingDate = prop.availableDates.find(avail => 
         datesOverlap(searchDates.start, searchDates.end, avail.start, avail.end)
       );
@@ -555,19 +380,8 @@ function Hearth() {
                 <a className="nav-link" onClick={() => setShowInvite(true)}>
                   <Icon name="person_add" /> Invite friends
                 </a>
-                <button className="login-btn" onClick={async () => {
-                  if (authHelpers) {
-                    await authHelpers.signOut();
-                  }
-                  setIsLoggedIn(false);
-                  setUserProfile(null);
-                }}>
-                  Log out
-                </button>
-                <div className="user-avatar" onClick={() => openUserPanel(userProfile || myProfile)}>
-                  {userProfile?.avatar ? (
-                    <img src={userProfile.avatar} alt={userProfile.name} style={{width: '100%', height: '100%', borderRadius: '50%'}} />
-                  ) : 'YO'}
+                <div className="user-avatar" onClick={() => openUserPanel(myProfile)}>
+                  YO
                 </div>
               </>
             ) : (
@@ -628,37 +442,31 @@ function Hearth() {
           <h2 style={{marginBottom: '32px', fontSize: '24px', fontWeight: 400}}>
             Featured homes from your circle
           </h2>
-          {loading ? (
-            <div style={{textAlign: 'center', padding: '40px'}}>
-              <p>Loading properties...</p>
-            </div>
-          ) : (
-            <div className="properties-grid">
-              {displayProperties.slice(0, 6).map(property => (
-                <div 
-                  key={property.id} 
-                  className="property-card"
-                  onClick={() => openProperty(property)}
-                >
-                  <img src={property.image} alt={property.name} className="property-image" />
-                  <div className="connection-badge">
-                    {property.owner.connection === 'friend' ? (
-                      <><Icon name="check_circle" /> Friend</>
-                    ) : (
-                      <><Icon name="people" /> {property.owner.mutualFriends} mutual friends</>
-                    )}
-                  </div>
-                  <h3 className="property-title">{property.name}</h3>
-                  <p className="property-location">{property.location}</p>
-                  <p className="property-info">{property.bedrooms} bedrooms</p>
-                  <div className="card-owner">
-                    <img src={property.owner.avatar} alt={property.owner.name} className="card-owner-avatar" />
-                    <span className="card-owner-name">{property.owner.name}</span>
-                  </div>
+          <div className="properties-grid">
+            {properties.slice(0, 6).map(property => (
+              <div 
+                key={property.id} 
+                className="property-card"
+                onClick={() => openProperty(property)}
+              >
+                <img src={property.image} alt={property.name} className="property-image" />
+                <div className="connection-badge">
+                  {property.owner.connection === 'friend' ? (
+                    <><Icon name="check_circle" /> Friend</>
+                  ) : (
+                    <><Icon name="people" /> {property.owner.mutualFriends} mutual friends</>
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
+                <h3 className="property-title">{property.name}</h3>
+                <p className="property-location">{property.location}</p>
+                <p className="property-info">{property.bedrooms} bedrooms</p>
+                <div className="card-owner">
+                  <img src={property.owner.avatar} alt={property.owner.name} className="card-owner-avatar" />
+                  <span className="card-owner-name">{property.owner.name}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -695,20 +503,13 @@ function Hearth() {
             <h2 style={{marginBottom: '32px', fontSize: '32px', fontWeight: 400}}>
               Available homes ({matchingProperties.filter(p => p.matchingDate).length} matches)
             </h2>
-            {matchingProperties.filter(p => p.matchingDate).length === 0 ? (
-              <div style={{textAlign: 'center', padding: '60px 20px', color: '#666'}}>
-                <Icon name="event_busy" style={{fontSize: '64px', marginBottom: '16px'}} />
-                <h3 style={{fontSize: '24px', fontWeight: 400, marginBottom: '12px'}}>No homes available for your dates</h3>
-                <p>Try different dates or adjust your search</p>
-              </div>
-            ) : (
-              <div className="properties-grid">
-                {matchingProperties.filter(p => p.matchingDate).map(property => (
-                  <div 
-                    key={property.id} 
-                    className="property-card"
-                    onClick={() => openProperty(property)}
-                  >
+            <div className="properties-grid">
+              {matchingProperties.map(property => (
+                <div 
+                  key={property.id} 
+                  className="property-card"
+                  onClick={() => openProperty(property)}
+                >
                   <img src={property.image} alt={property.name} className="property-image" />
                   <div className="connection-badge">
                     {property.owner.connection === 'friend' ? (
@@ -742,7 +543,6 @@ function Hearth() {
                 </div>
               ))}
             </div>
-            )}
           </div>
         </div>
       )}
@@ -1047,53 +847,22 @@ function Hearth() {
               </button>
             </div>
 
-            <form className="auth-form" onSubmit={async (e) => {
-              e.preventDefault();
-              const formData = new FormData(e.target);
-              const email = formData.get('email');
-              const password = formData.get('password');
-              const fullName = formData.get('fullName');
-
-              if (!authHelpers) {
-                alert('Authentication not available. Please check your connection.');
-                return;
-              }
-
-              if (authTab === 'signup') {
-                // Sign up
-                const { data, error } = await authHelpers.signUp(email, password, fullName);
-                if (error) {
-                  alert('Signup error: ' + error.message);
-                } else {
-                  alert('Success! Check your email to verify your account.');
-                  setShowAuth(false);
-                }
-              } else {
-                // Log in
-                const { data, error } = await authHelpers.signIn(email, password);
-                if (error) {
-                  alert('Login error: ' + error.message);
-                } else {
-                  setIsLoggedIn(true);
-                  setShowAuth(false);
-                }
-              }
-            }}>
+            <form className="auth-form" onSubmit={(e) => { e.preventDefault(); setIsLoggedIn(true); setShowAuth(false); }}>
               {authTab === 'signup' && (
                 <div className="auth-field">
                   <label>Full name</label>
-                  <input type="text" name="fullName" placeholder="Enter your full name" required />
+                  <input type="text" placeholder="Enter your full name" required />
                 </div>
               )}
               
               <div className="auth-field">
                 <label>Email</label>
-                <input type="email" name="email" placeholder="Enter your email" required />
+                <input type="email" placeholder="Enter your email" required />
               </div>
               
               <div className="auth-field">
                 <label>Password</label>
-                <input type="password" name="password" placeholder="Enter your password" required minLength="6" />
+                <input type="password" placeholder="Enter your password" required />
               </div>
 
               <button type="submit" className="auth-submit">
@@ -1103,20 +872,12 @@ function Hearth() {
 
             <div className="auth-divider">or continue with</div>
 
-            <button className="social-auth-btn" onClick={async () => {
-              if (authHelpers) {
-                await authHelpers.signInWithGoogle();
-              }
-            }}>
+            <button className="social-auth-btn" onClick={() => { setIsLoggedIn(true); setShowAuth(false); }}>
               <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
               Google
             </button>
 
-            <button className="social-auth-btn" onClick={async () => {
-              if (authHelpers) {
-                await authHelpers.signInWithFacebook();
-              }
-            }}>
+            <button className="social-auth-btn" onClick={() => { setIsLoggedIn(true); setShowAuth(false); }}>
               <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
               Facebook
             </button>
