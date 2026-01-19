@@ -310,8 +310,9 @@ function Hearth() {
 
   React.useEffect(() => {
     if (supabase) {
-      supabase.from('properties').select('*, owner:profiles!owner_id(*)').then(({ data }) => {
+      supabase.from('properties').select('*, owner:profiles!owner_id(*)').limit(100).then(({ data }) => {
         if (data) {
+          console.log(`Loaded ${data.length} properties from database`);
           setDbProperties(data.map(p => ({
             id: p.id, name: p.name, location: p.location,
             image: p.images?.[0] || '', images: p.images || [],
