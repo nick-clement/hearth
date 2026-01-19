@@ -343,23 +343,41 @@ function Hearth() {
   // Load properties from database
   React.useEffect(() => {
     async function loadProperties() {
-      if (!getSupabase()) {
-        console.log('Using fallback properties');
+      console.log('Starting to load properties...');
+      
+      const supabase = getSupabase();
+      if (!supabase) {
+        console.log('Supabase not available, using fallback properties');
         setDbProperties(properties);
         setLoading(false);
         return;
       }
 
-      const supabase = getSupabase();
-      const { data, error } = await supabase
-        .from('properties')
-        .select('*, owner:profiles!owner_id(*), availability:property_availability(*)')
-        .order('created_at', { ascending: false });
+      console.log('Fetching from Supabase...');
+      try {
+        const { data, error } = await supabase
+          .from('properties')
+          .select('*, owner:profiles!owner_id(*), availability:property_availability(*)')
+          .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error loading properties:', error);
-        setDbProperties(properties); // Fallback to hardcoded
-      } else {
+        console.log('Supabase response:', { data, error });
+
+        if (error) {
+          console.error('Error loading properties:', error);
+          setDbProperties(properties); // Fallback to hardcoded
+          setLoading(false);
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          console.log('No properties in database, using fallback');
+          setDbProperties(properties);
+          setLoading(false);
+          return;
+        }
+
+        console.log(`Loaded ${data.length} properties from database`);
+        
         // Transform database format to match app format
         const transformed = data.map(prop => ({
           id: prop.id,
@@ -387,9 +405,15 @@ function Hearth() {
             connection: 'friend'
           }
         }));
+        
+        console.log('Transformed properties:', transformed);
         setDbProperties(transformed);
+        setLoading(false);
+      } catch (err) {
+        console.error('Exception loading properties:', err);
+        setDbProperties(properties);
+        setLoading(false);
       }
-      setLoading(false);
     }
 
     loadProperties();
