@@ -1,6 +1,101 @@
-const { useState } = React;
+const { useState, useEffect } = React;
 
-// Material Icon Component
+// ========================================
+// SUPABASE CONFIGURATION - YOUR ACTUAL KEYS
+// ========================================
+const SUPABASE_URL = 'https://fiebezfcygegwkwpiccw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZWJlemZjeWdlZ3drd3BpY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3NjA3MzEsImV4cCI6MjA4NDMzNjczMX0.v8YvtEA5Dx-oxzyXG_2KJIGMIZUz2PEBzEWNKwl5gqQ';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ========================================
+// AUTH HELPER FUNCTIONS
+// ========================================
+const authHelpers = {
+  async signUp(email, password, fullName) {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName }
+      }
+    });
+    return { data, error };
+  },
+
+  async signIn(email, password) {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+    return { data, error };
+  },
+
+  async signInWithGoogle() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin }
+    });
+    return { data, error };
+  },
+
+  async signInWithFacebook() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options: { redirectTo: window.location.origin }
+    });
+    return { data, error };
+  },
+
+  async signOut() {
+    const { error } = await supabase.auth.signOut();
+    return { error };
+  },
+
+  async getCurrentUser() {
+    const { data: { user } } = await supabase.auth.getUser();
+    return user;
+  },
+
+  onAuthStateChange(callback) {
+    return supabase.auth.onAuthStateChange((event, session) => {
+      callback(event, session);
+    });
+  }
+};
+
+// ========================================
+// DATABASE HELPER FUNCTIONS
+// ========================================
+const dbHelpers = {
+  async getProfile(userId) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+    return { data, error };
+  },
+
+  async updateProfile(userId, updates) {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', userId)
+      .select()
+      .single();
+    return { data, error };
+  },
+
+  async getProperties() {
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*, owner:profiles!owner_id(*)')
+      .order('created_at', { ascending: false });
+    return { data, error };
+  }
+};
+
 const Icon = ({ name, className = "" }) => <span className={`material-icons ${className}`}>{name}</span>;
 
 // Logo Component
