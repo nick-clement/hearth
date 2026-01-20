@@ -464,14 +464,14 @@ function Hearth() {
             <div className="container">
               <div className="hero-content">
                 <div className="hero-text">
-                  <h1>Swap homes & travel for a fraction of the cost</h1>
-                  <p>Stay in beautiful homes with friends and friends-of-friends. No nightly fees.</p>
+                  <h1>Swap homes with friends & travel for free</h1>
+                  <p>A private network for swapping homes with people you trust. Beautiful stays, zero accommodation cost.</p>
                   
                   <div className="cost-comparison">
                     <div className="cost-box">
-                      <div className="cost-label">Swap with Hearth</div>
-                      <div className="cost-amount">£80</div>
-                      <div className="cost-note">7 night stay + £500 deposit (refunded)</div>
+                      <div className="cost-label">Swap with friends</div>
+                      <div className="cost-amount">£120</div>
+                      <div className="cost-note">£250 deposit (£130 refunded)</div>
                     </div>
                     <div className="cost-box highlight">
                       <div className="cost-label">Hotel or rental</div>
@@ -503,24 +503,24 @@ function Hearth() {
               <div className="steps-grid">
                 <div className="step">
                   <div className="step-icon">
-                    <Icon name="verified_user" />
+                    <Icon name="home" />
                   </div>
-                  <h3>Apply to unlock access</h3>
-                  <p>Only verified members with their own home can join. We're looking for safe, well-cared-for homes occupied by people who love to travel.</p>
+                  <h3>List your home</h3>
+                  <p>Add photos and details of your home. Set the dates you're happy to swap.</p>
                 </div>
                 <div className="step">
                   <div className="step-icon">
                     <Icon name="search" />
                   </div>
-                  <h3>Book available homes</h3>
-                  <p>No nightly fees - just £80 cleaning per stay. A £500 refundable deposit covers cleaning and any damages, returned within 48 hours.</p>
+                  <h3>Browse your circle</h3>
+                  <p>See homes from friends and friends-of-friends. Find somewhere you'd love to stay.</p>
                 </div>
                 <div className="step">
                   <div className="step-icon">
-                    <Icon name="star" />
+                    <Icon name="chat" />
                   </div>
-                  <h3>Host and earn travel credits</h3>
-                  <p>Earn credits each time you host. You'll meet and approve who stays in your home and we take care of the rest.</p>
+                  <h3>Arrange your swap</h3>
+                  <p>Message the owner directly to coordinate dates. Split the £80 cleaning fee and enjoy your stay!</p>
                 </div>
               </div>
             </div>
@@ -529,23 +529,23 @@ function Hearth() {
           {/* Trust & Safety */}
           <div className="trust-section">
             <div className="container">
-              <h2>Real people, real homes</h2>
+              <h2>Your trusted circle</h2>
               <div className="trust-points">
                 <div className="trust-point">
-                  <Icon name="verified" />
-                  <span>All members verified and must host their own home</span>
-                </div>
-                <div className="trust-point">
-                  <Icon name="video_call" />
-                  <span>Meet members over video before approving their trip</span>
-                </div>
-                <div className="trust-point">
-                  <Icon name="home" />
-                  <span>Swap and stay in real homes, not vacation rentals</span>
+                  <Icon name="people" />
+                  <span>Only friends and friends-of-friends can see your home</span>
                 </div>
                 <div className="trust-point">
                   <Icon name="shield" />
-                  <span>£500 deposit protects both host and guest</span>
+                  <span>£250 deposit protects both host and guest</span>
+                </div>
+                <div className="trust-point">
+                  <Icon name="cleaning_services" />
+                  <span>Professional deep clean after every stay</span>
+                </div>
+                <div className="trust-point">
+                  <Icon name="celebration" />
+                  <span>Amazing stays for £120 vs £1,800+ hotels</span>
                 </div>
               </div>
             </div>
@@ -557,16 +557,16 @@ function Hearth() {
               <h2>How pricing works</h2>
               <div className="faq-grid">
                 <div className="faq-item">
-                  <h3>Why only £80?</h3>
-                  <p>Home swapping means no accommodation costs - you're each using the other's home. You only pay for professional cleaning after your stay.</p>
+                  <h3>£250 deposit per swap</h3>
+                  <p>Held securely via Stripe. £100 covers your professional deep clean, £20 platform fee. £130 refunded within 48 hours.</p>
                 </div>
                 <div className="faq-item">
-                  <h3>What's the £500 deposit?</h3>
-                  <p>A refundable security deposit held via Stripe. £80 covers cleaning, the rest (£420) is returned within 48 hours. Any damages are deducted before refund.</p>
+                  <h3>Why the deposit?</h3>
+                  <p>Protects both parties. Covers cleaning costs and any accidental damage. Builds trust in the network.</p>
                 </div>
                 <div className="faq-item">
-                  <h3>Are there other fees?</h3>
-                  <p>No membership fees, no booking fees, no nightly rates. Just the £80 cleaning fee per stay. That's it.</p>
+                  <h3>Total cost?</h3>
+                  <p>£120 per stay (£100 cleaning + £20 platform fee). Compare that to £1,800+ for a week in a hotel!</p>
                 </div>
               </div>
             </div>
@@ -836,6 +836,13 @@ function Hearth() {
                   )}
                 </div>
               </div>
+              <button 
+                className="primary-btn" 
+                style={{marginTop: '20px', width: '100%'}}
+                onClick={() => window.location.href = `mailto:${selectedProperty.owner.email}?subject=Home swap inquiry: ${selectedProperty.name}&body=Hi ${selectedProperty.owner.name.split(' ')[0]}, I'd love to discuss swapping homes!`}
+              >
+                <Icon name="email" /> Contact {selectedProperty.owner.name.split(' ')[0]}
+              </button>
             </div>
           </div>
         </div>
