@@ -24,25 +24,26 @@ const Logo = () => (
 
 // My Profile Data
 const myProfile = {
-  name: "You",
-  location: "Chipping Norton, Oxfordshire",
-  avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=You",
-  email: "you@example.com",
-  bio: "Love sharing my home and discovering new places through friends.",
+  name: "Nick Clement",
+  location: "Bath, Somerset",
+  avatar: "https://i.pravatar.cc/150?img=15",
+  email: "nick@madestudio.co.uk",
+  bio: "Architect working on period property restorations. My Georgian house is my pride and joy.",
   properties: 1,
   swaps: 5,
   reviews: 8,
-  friends: 12
+  friends: 12,
+  yearJoined: 2024
 };
 
 // Friends in your circle
 const friends = [
-  { id: 1, name: "Sarah Chen", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" },
-  { id: 2, name: "Marcus Rodriguez", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus" },
-  { id: 3, name: "Emma Thompson", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emma" },
-  { id: 4, name: "David Kim", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=David" },
-  { id: 5, name: "Sophie Bennett", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie" },
-  { id: 6, name: "James Wright", avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=James" }
+  { id: 1, name: "Sarah Chen", avatar: "https://i.pravatar.cc/150?img=5" },
+  { id: 2, name: "Marcus Thompson", avatar: "https://i.pravatar.cc/150?img=12" },
+  { id: 3, name: "Emma Wilson", avatar: "https://i.pravatar.cc/150?img=9" },
+  { id: 4, name: "David Kim", avatar: "https://i.pravatar.cc/150?img=68" },
+  { id: 5, name: "Sophie Anderson", avatar: "https://i.pravatar.cc/150?img=47" },
+  { id: 6, name: "James Rodriguez", avatar: "https://i.pravatar.cc/150?img=33" }
 ];
 
 // Properties with dates and connection info
@@ -888,7 +889,7 @@ function Hearth() {
               {/* My Stats */}
               {selectedUser.properties && (
                 <div className="my-profile-section">
-                  <h4>Your Stats</h4>
+                  <h4>Stats</h4>
                   <div className="my-profile-stats">
                     <div className="profile-stat">
                       <div className="profile-stat-number">{selectedUser.properties}</div>
@@ -902,6 +903,32 @@ function Hearth() {
                       <div className="profile-stat-number">{selectedUser.reviews}</div>
                       <div className="profile-stat-label">Reviews</div>
                     </div>
+                    <div className="profile-stat">
+                      <div className="profile-stat-number">{selectedUser.yearJoined || '2024'}</div>
+                      <div className="profile-stat-label">Member since</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* My Property */}
+              {selectedUser.properties && selectedUser.email === 'nick@madestudio.co.uk' && (
+                <div className="panel-section">
+                  <h3>My Property</h3>
+                  <div className="my-property-card" onClick={() => {
+                    const bathProperty = allProperties.find(p => p.name === 'Bath Georgian House');
+                    if (bathProperty) openProperty(bathProperty);
+                  }}>
+                    <img 
+                      src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800" 
+                      alt="Bath Georgian House"
+                      style={{width: '100%', height: '120px', objectFit: 'cover', marginBottom: '12px'}}
+                    />
+                    <h4 style={{fontSize: '16px', marginBottom: '4px'}}>Bath Georgian House</h4>
+                    <p style={{fontSize: '14px', color: '#666', marginBottom: '8px'}}>Bath, Somerset • 4 bedrooms</p>
+                    <button className="secondary-btn" style={{width: '100%', padding: '8px'}}>
+                      Edit property
+                    </button>
                   </div>
                 </div>
               )}
