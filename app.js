@@ -310,12 +310,23 @@ function Hearth() {
 
   // Load all 20 properties from database
   React.useEffect(() => {
+    console.log('Attempting to load properties...');
+    console.log('Supabase available:', !!supabase);
+    
     if (supabase) {
+      console.log('Querying Supabase...');
       supabase
         .from('properties')
         .select('*, owner:profiles!owner_id(*)')
         .then(({ data, error }) => {
+          console.log('Query result:', { 
+            dataLength: data?.length, 
+            error: error?.message,
+            firstItem: data?.[0]?.name 
+          });
+          
           if (data && !error) {
+            console.log(`✅ Loaded ${data.length} properties from database`);
             const formatted = data.map(p => ({
               id: p.id,
               name: p.name,
@@ -336,9 +347,14 @@ function Hearth() {
                 connection: 'friend'
               }
             }));
+            console.log('Setting state with', formatted.length, 'properties');
             setAllProperties(formatted);
+          } else {
+            console.error('❌ Database error:', error);
           }
         });
+    } else {
+      console.log('⚠️ Supabase not available, using fallback properties');
     }
   }, []);
 
