@@ -1847,3 +1847,45 @@ h1, h2, h3, h4, h5, h6,
   width: 20px;
   height: 20px;
 }
+
+/* Fix button heights and rounding */
+.search-button,
+.primary-btn,
+.secondary-btn,
+.login-btn,
+.signup-btn {
+  border-radius: 8px !important;
+  height: 48px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 24px !important;
+}
+
+/* Match input field heights */
+input[type="date"],
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  height: 48px !important;
+  border-radius: 8px !important;
+  padding: 0 16px !important;
+}
+
+/* Search fields container */
+.search-field input {
+  height: 48px !important;
+  border-radius: 8px !important;
+}
+
+/* Update button in browse view */
+button:not(.panel-close):not(.show-all-photos-btn) {
+  border-radius: 8px !important;
+}
+
+/* Ensure all form buttons match */
+button[type="submit"],
+button[type="button"] {
+  height: 48px !important;
+  border-radius: 8px !important;
+}
