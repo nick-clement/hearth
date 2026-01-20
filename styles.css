@@ -1806,3 +1806,34 @@ img,
 .search-fields {
   align-items: end !important;
 }
+
+/* My Property card in profile */
+.my-property-card {
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #e0e0e0;
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.my-property-card:hover {
+  border-color: #1a1a1a;
+  transform: translateY(-2px);
+}
+
+.my-property-card img {
+  border-radius: 4px !important;
+}
+
+/* Improved stats grid */
+.my-profile-stats {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 16px !important;
+}
+
+@media (max-width: 768px) {
+  .my-profile-stats {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
