@@ -1889,3 +1889,28 @@ button[type="button"] {
   height: 48px !important;
   border-radius: 8px !important;
 }
+
+/* Align search button to bottom of inputs */
+.search-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 16px;
+  align-items: end !important;
+}
+
+.search-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-field label {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.search-button {
+  margin-bottom: 0 !important;
+  align-self: end !important;
+}
