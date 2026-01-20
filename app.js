@@ -310,7 +310,7 @@ function Hearth() {
   const [showGallery, setShowGallery] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [authTab, setAuthTab] = useState('login');
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Start logged out for testing
   const [allProperties, setAllProperties] = useState(properties);
 
   // Load all 20 properties from database
@@ -425,6 +425,41 @@ function Hearth() {
 
   return (
     <div>
+      {/* Dev Toggle - Remove in production */}
+      <div style={{
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        zIndex: 10000,
+        background: 'rgba(0,0,0,0.9)',
+        color: 'white',
+        padding: '12px 16px',
+        borderRadius: '4px',
+        fontSize: '13px',
+        fontFamily: 'monospace',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+      }}>
+        <span>DEV:</span>
+        <button
+          onClick={() => setIsLoggedIn(!isLoggedIn)}
+          style={{
+            background: isLoggedIn ? '#22c55e' : '#ef4444',
+            color: 'white',
+            border: 'none',
+            padding: '6px 12px',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '12px',
+            fontWeight: 'bold'
+          }}
+        >
+          {isLoggedIn ? '✓ LOGGED IN' : '✗ LOGGED OUT'}
+        </button>
+      </div>
+
       {/* Header */}
       <header className="header">
         <div className="header-content">
