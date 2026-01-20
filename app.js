@@ -451,8 +451,8 @@ function Hearth() {
                   <div className="cost-comparison">
                     <div className="cost-box">
                       <div className="cost-label">Swap with Hearth</div>
-                      <div className="cost-amount">£350</div>
-                      <div className="cost-note">7 night stay</div>
+                      <div className="cost-amount">£80</div>
+                      <div className="cost-note">7 night stay + £500 deposit (refunded)</div>
                     </div>
                     <div className="cost-box highlight">
                       <div className="cost-label">Hotel or rental</div>
@@ -494,7 +494,7 @@ function Hearth() {
                     <Icon name="search" />
                   </div>
                   <h3>Book available homes</h3>
-                  <p>No nightly fees. Just pay for cleaning + a small service fee per trip. New members can book up to 5 nights before they host.</p>
+                  <p>No nightly fees - just £80 cleaning per stay. A £500 refundable deposit covers cleaning and any damages, returned within 48 hours.</p>
                 </div>
                 <div className="step">
                   <div className="step-icon">
@@ -526,7 +526,28 @@ function Hearth() {
                 </div>
                 <div className="trust-point">
                   <Icon name="shield" />
-                  <span>£100,000 host coverage included per stay</span>
+                  <span>£500 deposit protects both host and guest</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Pricing FAQ */}
+          <div className="pricing-faq">
+            <div className="container">
+              <h2>How pricing works</h2>
+              <div className="faq-grid">
+                <div className="faq-item">
+                  <h3>Why only £80?</h3>
+                  <p>Home swapping means no accommodation costs - you're each using the other's home. You only pay for professional cleaning after your stay.</p>
+                </div>
+                <div className="faq-item">
+                  <h3>What's the £500 deposit?</h3>
+                  <p>A refundable security deposit held via Stripe. £80 covers cleaning, the rest (£420) is returned within 48 hours. Any damages are deducted before refund.</p>
+                </div>
+                <div className="faq-item">
+                  <h3>Are there other fees?</h3>
+                  <p>No membership fees, no booking fees, no nightly rates. Just the £80 cleaning fee per stay. That's it.</p>
                 </div>
               </div>
             </div>
