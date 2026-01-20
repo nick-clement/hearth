@@ -439,56 +439,112 @@ function Hearth() {
 
       {/* Home View */}
       {view === 'home' && (
-        <div className="container">
-          <div className="hero">
-            <h1>Home swapping with friends</h1>
-            <p>Stay in homes you trust, with people you know</p>
-          </div>
+        <div>
+          {/* Hero with cost comparison */}
+          <div className="hero-new">
+            <div className="container">
+              <div className="hero-content">
+                <div className="hero-text">
+                  <h1>Swap homes & travel for a fraction of the cost</h1>
+                  <p>Stay in beautiful homes with friends and friends-of-friends. No nightly fees.</p>
+                  
+                  <div className="cost-comparison">
+                    <div className="cost-box">
+                      <div className="cost-label">Swap with Hearth</div>
+                      <div className="cost-amount">£350</div>
+                      <div className="cost-note">7 night stay</div>
+                    </div>
+                    <div className="cost-box highlight">
+                      <div className="cost-label">Hotel or rental</div>
+                      <div className="cost-amount">£1,800+</div>
+                      <div className="cost-note">7 night stay</div>
+                    </div>
+                  </div>
 
-          <div className="search-box">
-            <div className="search-fields">
-              <div className="search-field">
-                <label>Check in</label>
-                <input 
-                  type="date" 
-                  value={searchDates.start}
-                  onChange={(e) => setSearchDates({...searchDates, start: e.target.value})}
-                />
-              </div>
-              <div className="search-field">
-                <label>Check out</label>
-                <input 
-                  type="date"
-                  value={searchDates.end}
-                  onChange={(e) => setSearchDates({...searchDates, end: e.target.value})}
-                />
+                  <div className="hero-cta">
+                    <button className="primary-btn" onClick={() => { setAuthTab('signup'); setShowAuth(true); }}>
+                      Get started
+                    </button>
+                    <button className="secondary-btn" onClick={() => setView('results')}>
+                      Browse homes
+                    </button>
+                  </div>
+                </div>
+                <div className="hero-image">
+                  <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800" alt="Beautiful home interior" />
+                </div>
               </div>
             </div>
-            <button className="search-button" onClick={handleSearch}>
-              Search available homes
-            </button>
           </div>
 
-          <div className="about">
-            <h2>How Hearth works</h2>
-            <p>
-              Hearth is a private home-swapping network for friends and their trusted connections. 
-              List your home, browse properties from people in your circle, and swap simultaneously. 
-              Only friends and friends-of-friends with 2+ mutual connections can see your listing.
-            </p>
+          {/* How it works */}
+          <div className="how-it-works">
+            <div className="container">
+              <h2>How Hearth works</h2>
+              <div className="steps-grid">
+                <div className="step">
+                  <div className="step-icon">
+                    <Icon name="verified_user" />
+                  </div>
+                  <h3>Apply to unlock access</h3>
+                  <p>Only verified members with their own home can join. We're looking for safe, well-cared-for homes occupied by people who love to travel.</p>
+                </div>
+                <div className="step">
+                  <div className="step-icon">
+                    <Icon name="search" />
+                  </div>
+                  <h3>Book available homes</h3>
+                  <p>No nightly fees. Just pay for cleaning + a small service fee per trip. New members can book up to 5 nights before they host.</p>
+                </div>
+                <div className="step">
+                  <div className="step-icon">
+                    <Icon name="star" />
+                  </div>
+                  <h3>Host and earn travel credits</h3>
+                  <p>Earn credits each time you host. You'll meet and approve who stays in your home and we take care of the rest.</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <h2 style={{marginBottom: '32px', fontSize: '24px', fontWeight: 400}}>
-            Featured homes from your circle
-          </h2>
-          <div className="properties-grid">
-            {allProperties.slice(0, 6).map(property => (
-              <div 
-                key={property.id} 
-                className="property-card"
-                onClick={() => openProperty(property)}
-              >
-                <img src={property.image} alt={property.name} className="property-image" />
+          {/* Trust & Safety */}
+          <div className="trust-section">
+            <div className="container">
+              <h2>Real people, real homes</h2>
+              <div className="trust-points">
+                <div className="trust-point">
+                  <Icon name="verified" />
+                  <span>All members verified and must host their own home</span>
+                </div>
+                <div className="trust-point">
+                  <Icon name="video_call" />
+                  <span>Meet members over video before approving their trip</span>
+                </div>
+                <div className="trust-point">
+                  <Icon name="home" />
+                  <span>Swap and stay in real homes, not vacation rentals</span>
+                </div>
+                <div className="trust-point">
+                  <Icon name="shield" />
+                  <span>£100,000 host coverage included per stay</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Featured homes */}
+          <div className="container" style={{marginTop: '80px'}}>
+            <h2 style={{marginBottom: '32px', fontSize: '32px', fontWeight: 400}}>
+              Featured homes from your circle
+            </h2>
+            <div className="properties-grid">
+              {allProperties.slice(0, 6).map(property => (
+                <div 
+                  key={property.id} 
+                  className="property-card"
+                  onClick={() => openProperty(property)}
+                >
+                  <img src={property.image} alt={property.name} className="property-image" />
                 <div className="connection-badge">
                   {property.owner.connection === 'friend' ? (
                     <><Icon name="check_circle" /> Friend</>
