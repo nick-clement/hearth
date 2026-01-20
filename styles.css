@@ -1784,178 +1784,31 @@ html, body {
     font-size: 28px;
   }
 }
-/* CRITICAL FIXES - Add to END of styles.css to override everything */
-
-/* Force hero background color */
-.hero-new {
-  background: #F7F0E7 !important;
-  background-image: none !important;
-  padding: 80px 0 20px 0 !important;
-  margin-bottom: 0 !important;
+/* NUCLEAR OPTION - Remove ALL border radius with maximum specificity */
+*,
+*::before,
+*::after,
+button,
+a,
+div,
+span,
+img,
+input,
+textarea,
+select {
+  border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
 }
 
-/* Force spacing fix */
-.how-it-works {
-  margin-top: 0 !important;
-  padding: 60px 0 !important;
-  margin-bottom: 60px !important;
-}
-
-/* Force fonts */
-body {
-  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-}
-
-h1, h2, h3, h4, h5, h6,
-.hero-text h1,
-.how-it-works h2,
-.trust-section h2,
-.pricing-faq h2,
-.step h3,
-.faq-item h3 {
-  font-family: 'Instrument Serif', Georgia, serif !important;
-  font-weight: 400 !important;
-}
-
-/* Better social icons */
-.footer-social {
-  display: flex;
-  gap: 16px;
-  margin-top: 24px;
-}
-
-.social-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: white;
-  text-decoration: none;
-}
-
-.social-icon:hover {
-  background: #555;
-  transform: translateY(-2px);
-}
-
-.social-icon svg {
-  width: 20px;
-  height: 20px;
-}
-
-/* Fix button heights and rounding */
-.search-button,
-.primary-btn,
-.secondary-btn,
-.login-btn,
-.signup-btn {
-  border-radius: 8px !important;
-  height: 48px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 24px !important;
-}
-
-/* Match input field heights */
-input[type="date"],
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  height: 48px !important;
-  border-radius: 8px !important;
-  padding: 0 16px !important;
-}
-
-/* Search fields container */
-.search-field input {
-  height: 48px !important;
-  border-radius: 8px !important;
-}
-
-/* Update button in browse view */
-button:not(.panel-close):not(.show-all-photos-btn) {
-  border-radius: 8px !important;
-}
-
-/* Ensure all form buttons match */
-button[type="submit"],
-button[type="button"] {
-  height: 48px !important;
-  border-radius: 8px !important;
-}
-
-/* Align search button to bottom of inputs */
-.search-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 16px;
-  align-items: end !important;
-}
-
-.search-field {
-  display: flex;
-  flex-direction: column;
-}
-
-.search-field label {
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #666;
-}
-
-.search-button {
-  margin-bottom: 0 !important;
-  align-self: end !important;
-}
-
-/* Sharp-edged buttons - no rounding */
-.search-button,
 .primary-btn,
 .secondary-btn,
 .login-btn,
 .signup-btn,
-button,
-.hero-cta button {
+.search-button,
+.hero-cta button,
+button[type="submit"],
+button[type="button"] {
   border-radius: 0 !important;
-}
-
-/* Keep inputs rounded but subtle */
-input[type="date"],
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  border-radius: 4px !important;
-}
-
-.search-field input {
-  border-radius: 4px !important;
-}
-
-/* Remove ALL border radius from everything */
-* {
-  border-radius: 0 !important;
-}
-
-/* Explicitly target common rounded elements */
-.property-card,
-.property-image,
-.user-avatar,
-.card-owner-avatar,
-.owner-avatar,
-.panel-avatar,
-.connection-badge,
-.availability-tag,
-.cost-box,
-.step-icon,
-.trust-point,
-.social-icon,
-img {
-  border-radius: 0 !important;
+  -webkit-border-radius: 0 !important;
 }
