@@ -1790,3 +1790,17 @@ select,
   -webkit-border-radius: 0 !important;
   -moz-border-radius: 0 !important;
 }
+
+/* Fix social icon colors */
+.social-icon,
+.social-icon svg,
+.footer-social a {
+  color: white !important;
+  fill: white !important;
+}
+
+.social-icon:hover,
+.social-icon:hover svg {
+  color: white !important;
+  fill: white !important;
+}
