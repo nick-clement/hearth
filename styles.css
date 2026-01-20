@@ -1784,3 +1784,35 @@ html, body {
     font-size: 28px;
   }
 }
+/* CRITICAL FIXES - Add to END of styles.css to override everything */
+
+/* Force hero background color */
+.hero-new {
+  background: #F7F0E7 !important;
+  background-image: none !important;
+  padding: 80px 0 20px 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Force spacing fix */
+.how-it-works {
+  margin-top: 0 !important;
+  padding: 60px 0 !important;
+  margin-bottom: 60px !important;
+}
+
+/* Force fonts */
+body {
+  font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+.hero-text h1,
+.how-it-works h2,
+.trust-section h2,
+.pricing-faq h2,
+.step h3,
+.faq-item h3 {
+  font-family: 'Instrument Serif', Georgia, serif !important;
+  font-weight: 400 !important;
+}
