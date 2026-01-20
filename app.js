@@ -323,39 +323,49 @@ function Hearth() {
       supabase
         .from('properties')
         .select('*, owner:profiles!owner_id(*), availability:property_availability(*)')
+        .order('created_at', { ascending: false })
         .then(({ data, error }) => {
           console.log('Query result:', { 
             dataLength: data?.length, 
             error: error?.message,
-            firstItem: data?.[0]?.name 
+            firstItem: data?.[0]?.name,
+            firstImage: data?.[0]?.images?.[0]
           });
           
           if (data && !error) {
             console.log(`✅ Loaded ${data.length} properties from database`);
-            const formatted = data.map(p => ({
-              id: p.id,
-              name: p.name,
-              location: p.location,
-              image: p.images?.[0] || '',
-              images: p.images || [],
-              bedrooms: p.bedrooms,
-              description: p.description || '',
-              amenities: p.amenities || [],
-              availableDates: (p.availability || []).map(a => ({
-                start: a.start_date,
-                end: a.end_date
-              })),
-              neighborhood: { description: '', nearby: [] },
-              owner: {
-                name: p.owner?.full_name || 'Host',
-                location: p.owner?.location || p.location,
-                avatar: p.owner?.avatar_url || 'https://i.pravatar.cc/150?img=1',
-                email: p.owner?.email || '',
-                bio: p.owner?.bio || '',
-                connection: 'friend'
-              }
-            }));
+            const formatted = data.map(p => {
+              // Ensure images array exists and has at least one image
+              const imageArray = (p.images && p.images.length > 0) 
+                ? p.images 
+                : ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800'];
+              
+              return {
+                id: p.id,
+                name: p.name,
+                location: p.location,
+                image: imageArray[0],
+                images: imageArray,
+                bedrooms: p.bedrooms,
+                description: p.description || '',
+                amenities: p.amenities || [],
+                availableDates: (p.availability || []).map(a => ({
+                  start: a.start_date,
+                  end: a.end_date
+                })),
+                neighborhood: { description: '', nearby: [] },
+                owner: {
+                  name: p.owner?.full_name || 'Host',
+                  location: p.owner?.location || p.location,
+                  avatar: p.owner?.avatar_url || 'https://i.pravatar.cc/150?img=1',
+                  email: p.owner?.email || '',
+                  bio: p.owner?.bio || '',
+                  connection: 'friend'
+                }
+              };
+            });
             console.log('Setting state with', formatted.length, 'properties');
+            console.log('Bristol Warehouse image:', formatted.find(p => p.name === 'Bristol Warehouse')?.image);
             setAllProperties(formatted);
           } else {
             console.error('❌ Database error:', error);
