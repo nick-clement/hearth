@@ -322,7 +322,12 @@ function Hearth() {
       console.log('Querying Supabase...');
       supabase
         .from('properties')
-        .select('*, owner:profiles!owner_id(*), availability:property_availability(*)')
+        .select(`
+          *, 
+          owner:profiles!owner_id(*),
+          fake_owner:fake_owners!fake_owner_id(*),
+          availability:property_availability(*)
+        `)
         .order('created_at', { ascending: false })
         .then(({ data, error }) => {
           console.log('Query result:', { 
@@ -340,6 +345,9 @@ function Hearth() {
                 ? p.images 
                 : ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800'];
               
+              // Use fake_owner if available, otherwise real owner
+              const ownerData = p.fake_owner || p.owner;
+              
               return {
                 id: p.id,
                 name: p.name,
@@ -355,11 +363,12 @@ function Hearth() {
                 })),
                 neighborhood: { description: '', nearby: [] },
                 owner: {
-                  name: p.owner?.full_name || 'Host',
-                  location: p.owner?.location || p.location,
-                  avatar: p.owner?.avatar_url || 'https://i.pravatar.cc/150?img=1',
-                  email: p.owner?.email || '',
-                  bio: p.owner?.bio || '',
+                  name: ownerData?.full_name || 'Host',
+                  location: ownerData?.location || p.location,
+                  avatar: ownerData?.avatar_url || 'https://i.pravatar.cc/150?img=1',
+                  email: ownerData?.email || '',
+                  bio: ownerData?.bio || '',
+                  phone: ownerData?.phone || '',
                   connection: 'friend'
                 }
               };
