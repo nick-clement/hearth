@@ -3,9 +3,13 @@ const { useState } = React;
 // Supabase setup
 const SUPABASE_URL = 'https://fiebezfcygegwkwpiccw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZpZWJlemZjeWdlZ3drd3BpY2N3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg3NjA3MzEsImV4cCI6MjA4NDMzNjczMX0.v8YvtEA5Dx-oxzyXG_2KJIGMIZUz2PEBzEWNKwl5gqQ';
-let supabase = null;
-if (typeof window !== 'undefined' && window.supabase) {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function getSupabase() {
+  if (typeof window.supabase === 'undefined') return null;
+  if (!window._supabaseClient) {
+    window._supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+  return window._supabaseClient;
 }
 
 // Material Icon Component
@@ -311,6 +315,7 @@ function Hearth() {
   // Load all 20 properties from database
   React.useEffect(() => {
     console.log('Attempting to load properties...');
+    const supabase = getSupabase();
     console.log('Supabase available:', !!supabase);
     
     if (supabase) {
