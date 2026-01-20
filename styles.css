@@ -1914,3 +1914,26 @@ button[type="button"] {
   margin-bottom: 0 !important;
   align-self: end !important;
 }
+
+/* Sharp-edged buttons - no rounding */
+.search-button,
+.primary-btn,
+.secondary-btn,
+.login-btn,
+.signup-btn,
+button,
+.hero-cta button {
+  border-radius: 0 !important;
+}
+
+/* Keep inputs rounded but subtle */
+input[type="date"],
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  border-radius: 4px !important;
+}
+
+.search-field input {
+  border-radius: 4px !important;
+}
