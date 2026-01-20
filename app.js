@@ -322,7 +322,7 @@ function Hearth() {
       console.log('Querying Supabase...');
       supabase
         .from('properties')
-        .select('*, owner:profiles!owner_id(*)')
+        .select('*, owner:profiles!owner_id(*), availability:property_availability(*)')
         .then(({ data, error }) => {
           console.log('Query result:', { 
             dataLength: data?.length, 
@@ -341,7 +341,10 @@ function Hearth() {
               bedrooms: p.bedrooms,
               description: p.description || '',
               amenities: p.amenities || [],
-              availableDates: [],
+              availableDates: (p.availability || []).map(a => ({
+                start: a.start_date,
+                end: a.end_date
+              })),
               neighborhood: { description: '', nearby: [] },
               owner: {
                 name: p.owner?.full_name || 'Host',
@@ -537,10 +540,17 @@ function Hearth() {
 
           <div className="container">
             <h2 style={{marginBottom: '32px', fontSize: '32px', fontWeight: 400}}>
-              Available homes ({allProperties.length} total)
+              Available homes ({matchingProperties.filter(p => p.matchingDate).length} matches)
             </h2>
-            <div className="properties-grid">
-              {allProperties.map(property => (
+            {matchingProperties.filter(p => p.matchingDate).length === 0 ? (
+              <div style={{textAlign: 'center', padding: '60px 20px', color: '#666'}}>
+                <Icon name="event_busy" style={{fontSize: '64px', marginBottom: '16px'}} />
+                <h3 style={{fontSize: '24px', fontWeight: 400, marginBottom: '12px'}}>No homes available for your dates</h3>
+                <p>Try different dates or adjust your search</p>
+              </div>
+            ) : (
+              <div className="properties-grid">
+                {matchingProperties.filter(p => p.matchingDate).map(property => (
                 <div 
                   key={property.id} 
                   className="property-card"
@@ -579,6 +589,7 @@ function Hearth() {
                 </div>
               ))}
             </div>
+            )}
           </div>
         </div>
       )}
