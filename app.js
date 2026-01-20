@@ -428,7 +428,7 @@ function Hearth() {
       {/* Dev Toggle - Remove in production */}
       <div style={{
         position: 'fixed',
-        top: '20px',
+        top: '80px',
         right: '20px',
         zIndex: 10000,
         background: 'rgba(0,0,0,0.9)',
