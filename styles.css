@@ -1426,3 +1426,265 @@ html, body {
   object-fit: cover;
   border-radius: 50%;
 }
+/* Add these styles to the END of your styles.css */
+
+/* New Hero Section */
+.hero-new {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 80px 0;
+  margin-bottom: 80px;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: #1a1a1a;
+}
+
+.hero-text p {
+  font-size: 20px;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.cost-comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.cost-box {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  border: 2px solid #e0e0e0;
+}
+
+.cost-box.highlight {
+  border-color: #1a1a1a;
+}
+
+.cost-label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.cost-amount {
+  font-size: 36px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.cost-note {
+  font-size: 13px;
+  color: #999;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 16px;
+}
+
+.primary-btn {
+  padding: 16px 32px;
+  background: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.primary-btn:hover {
+  background: #333;
+  transform: translateY(-2px);
+}
+
+.secondary-btn {
+  padding: 16px 32px;
+  background: white;
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.secondary-btn:hover {
+  background: #f5f5f5;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+/* How It Works Section */
+.how-it-works {
+  background: #f9f9f9;
+  padding: 80px 0;
+  margin-bottom: 80px;
+}
+
+.how-it-works h2 {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 400;
+  margin-bottom: 60px;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.step {
+  text-align: center;
+}
+
+.step-icon {
+  width: 80px;
+  height: 80px;
+  background: #1a1a1a;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.step-icon .material-icons {
+  font-size: 40px;
+}
+
+.step h3 {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.step p {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Trust Section */
+.trust-section {
+  padding: 60px 0;
+  margin-bottom: 60px;
+}
+
+.trust-section h2 {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 400;
+  margin-bottom: 40px;
+}
+
+.trust-points {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.trust-point {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+}
+
+.trust-point .material-icons {
+  color: #1a1a1a;
+  font-size: 32px;
+}
+
+.trust-point span {
+  font-size: 15px;
+  color: #333;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .hero-new {
+    padding: 40px 0;
+  }
+
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero-text h1 {
+    font-size: 32px;
+  }
+
+  .hero-text p {
+    font-size: 16px;
+  }
+
+  .cost-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-cta {
+    flex-direction: column;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+  }
+
+  .hero-image {
+    order: -1;
+  }
+
+  .hero-image img {
+    height: 300px;
+  }
+
+  .how-it-works h2 {
+    font-size: 28px;
+  }
+
+  .steps-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .trust-section h2 {
+    font-size: 28px;
+  }
+
+  .trust-points {
+    grid-template-columns: 1fr;
+  }
+}
