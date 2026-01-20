@@ -545,22 +545,23 @@ function Hearth() {
                   onClick={() => openProperty(property)}
                 >
                   <img src={property.image} alt={property.name} className="property-image" />
-                <div className="connection-badge">
-                  {property.owner.connection === 'friend' ? (
-                    <><Icon name="check_circle" /> Friend</>
-                  ) : (
-                    <><Icon name="people" /> {property.owner.mutualFriends} mutual friends</>
-                  )}
+                  <div className="connection-badge">
+                    {property.owner.connection === 'friend' ? (
+                      <><Icon name="check_circle" /> Friend</>
+                    ) : (
+                      <><Icon name="people" /> {property.owner.mutualFriends} mutual friends</>
+                    )}
+                  </div>
+                  <h3 className="property-title">{property.name}</h3>
+                  <p className="property-location">{property.location}</p>
+                  <p className="property-info">{property.bedrooms} bedrooms</p>
+                  <div className="card-owner">
+                    <img src={property.owner.avatar} alt={property.owner.name} className="card-owner-avatar" />
+                    <span className="card-owner-name">{property.owner.name}</span>
+                  </div>
                 </div>
-                <h3 className="property-title">{property.name}</h3>
-                <p className="property-location">{property.location}</p>
-                <p className="property-info">{property.bedrooms} bedrooms</p>
-                <div className="card-owner">
-                  <img src={property.owner.avatar} alt={property.owner.name} className="card-owner-avatar" />
-                  <span className="card-owner-name">{property.owner.name}</span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       )}
