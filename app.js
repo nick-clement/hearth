@@ -464,14 +464,14 @@ function Hearth() {
             <div className="container">
               <div className="hero-content">
                 <div className="hero-text">
-                  <h1>Swap homes with friends & travel for free</h1>
-                  <p>A private network for swapping homes with people you trust. Beautiful stays, zero accommodation cost.</p>
+                  <h1>An invite-only club for home swapping</h1>
+                  <p>A discreet network for swapping beautiful homes with trusted friends and their connections.</p>
                   
                   <div className="cost-comparison">
                     <div className="cost-box">
-                      <div className="cost-label">Swap with friends</div>
-                      <div className="cost-amount">£120</div>
-                      <div className="cost-note">£250 deposit (£130 refunded)</div>
+                      <div className="cost-label">Club member</div>
+                      <div className="cost-amount">£120–£160</div>
+                      <div className="cost-note">Per stay + £250 refundable deposit</div>
                     </div>
                     <div className="cost-box highlight">
                       <div className="cost-label">Hotel or rental</div>
@@ -482,9 +482,16 @@ function Hearth() {
 
                   <div className="hero-cta">
                     <button className="primary-btn" onClick={() => { setAuthTab('signup'); setShowAuth(true); }}>
-                      Get started
+                      Request an invite
                     </button>
-                    <button className="secondary-btn" onClick={() => setView('results')}>
+                    <button className="secondary-btn" onClick={() => {
+                      if (!isLoggedIn) {
+                        setAuthTab('login');
+                        setShowAuth(true);
+                      } else {
+                        setView('results');
+                      }
+                    }}>
                       Browse homes
                     </button>
                   </div>
@@ -499,28 +506,28 @@ function Hearth() {
           {/* How it works */}
           <div className="how-it-works">
             <div className="container">
-              <h2>How Hearth works</h2>
+              <h2>How the club works</h2>
               <div className="steps-grid">
+                <div className="step">
+                  <div className="step-icon">
+                    <Icon name="how_to_reg" />
+                  </div>
+                  <h3>Request an invite</h3>
+                  <p>Apply for membership. We review applications to ensure quality homes and trusted members.</p>
+                </div>
                 <div className="step">
                   <div className="step-icon">
                     <Icon name="home" />
                   </div>
                   <h3>List your home</h3>
-                  <p>Add photos and details of your home. Set the dates you're happy to swap.</p>
+                  <p>Once approved, add your property with photos and available dates. Set your preferences.</p>
                 </div>
                 <div className="step">
                   <div className="step-icon">
-                    <Icon name="search" />
+                    <Icon name="sync_alt" />
                   </div>
-                  <h3>Browse your circle</h3>
-                  <p>See homes from friends and friends-of-friends. Find somewhere you'd love to stay.</p>
-                </div>
-                <div className="step">
-                  <div className="step-icon">
-                    <Icon name="chat" />
-                  </div>
-                  <h3>Arrange your swap</h3>
-                  <p>Message the owner directly to coordinate dates. Split the £80 cleaning fee and enjoy your stay!</p>
+                  <h3>Request swaps</h3>
+                  <p>Browse the network and request swaps with members. Cleaning from £80–140, £20 club fee per stay.</p>
                 </div>
               </div>
             </div>
@@ -529,23 +536,23 @@ function Hearth() {
           {/* Trust & Safety */}
           <div className="trust-section">
             <div className="container">
-              <h2>Your trusted circle</h2>
+              <h2>An exclusive network</h2>
               <div className="trust-points">
                 <div className="trust-point">
-                  <Icon name="people" />
-                  <span>Only friends and friends-of-friends can see your home</span>
+                  <Icon name="verified_user" />
+                  <span>Invite-only membership with vetted homes</span>
                 </div>
                 <div className="trust-point">
                   <Icon name="shield" />
-                  <span>£250 deposit protects both host and guest</span>
+                  <span>£250 refundable deposit protects everyone</span>
                 </div>
                 <div className="trust-point">
                   <Icon name="cleaning_services" />
-                  <span>Professional deep clean after every stay</span>
+                  <span>Professional cleaning included</span>
                 </div>
                 <div className="trust-point">
-                  <Icon name="celebration" />
-                  <span>Amazing stays for £120 vs £1,800+ hotels</span>
+                  <Icon name="lock" />
+                  <span>Discreet — only members can browse</span>
                 </div>
               </div>
             </div>
@@ -554,19 +561,19 @@ function Hearth() {
           {/* Pricing FAQ */}
           <div className="pricing-faq">
             <div className="container">
-              <h2>How pricing works</h2>
+              <h2>Pricing</h2>
               <div className="faq-grid">
                 <div className="faq-item">
-                  <h3>£250 deposit per swap</h3>
-                  <p>Held securely via Stripe. £100 covers your professional deep clean, £20 platform fee. £130 refunded within 48 hours.</p>
+                  <h3>Professional cleaning</h3>
+                  <p>From £80–£140 depending on property size. Ensures every home is spotless for your arrival.</p>
                 </div>
                 <div className="faq-item">
-                  <h3>Why the deposit?</h3>
-                  <p>Protects both parties. Covers cleaning costs and any accidental damage. Builds trust in the network.</p>
+                  <h3>Refundable deposit</h3>
+                  <p>£250 held securely via Stripe. Covers cleaning costs and any accidental damage. Refunded within 48 hours after your stay.</p>
                 </div>
                 <div className="faq-item">
-                  <h3>Total cost?</h3>
-                  <p>£120 per stay (£100 cleaning + £20 platform fee). Compare that to £1,800+ for a week in a hotel!</p>
+                  <h3>Club fee</h3>
+                  <p>£20 per swap keeps the platform running. Total cost per stay: £120–£160 vs £1,800+ for a hotel.</p>
                 </div>
               </div>
             </div>
@@ -582,7 +589,14 @@ function Hearth() {
                 <div 
                   key={property.id} 
                   className="property-card"
-                  onClick={() => openProperty(property)}
+                  onClick={() => {
+                    if (!isLoggedIn) {
+                      setAuthTab('login');
+                      setShowAuth(true);
+                    } else {
+                      openProperty(property);
+                    }
+                  }}
                 >
                   <img src={property.image} alt={property.name} className="property-image" />
                   <div className="connection-badge">
@@ -651,7 +665,14 @@ function Hearth() {
                 <div 
                   key={property.id} 
                   className="property-card"
-                  onClick={() => openProperty(property)}
+                  onClick={() => {
+                    if (!isLoggedIn) {
+                      setAuthTab('login');
+                      setShowAuth(true);
+                    } else {
+                      openProperty(property);
+                    }
+                  }}
                 >
                   <img src={property.image} alt={property.name} className="property-image" />
                   <div className="connection-badge">
@@ -839,9 +860,9 @@ function Hearth() {
               <button 
                 className="primary-btn" 
                 style={{marginTop: '20px', width: '100%'}}
-                onClick={() => window.location.href = `mailto:${selectedProperty.owner.email}?subject=Home swap inquiry: ${selectedProperty.name}&body=Hi ${selectedProperty.owner.name.split(' ')[0]}, I'd love to discuss swapping homes!`}
+                onClick={() => window.location.href = `mailto:${selectedProperty.owner.email}?subject=Swap request: ${selectedProperty.name}&body=Hi ${selectedProperty.owner.name.split(' ')[0]}, I'd like to request a swap at your home!`}
               >
-                <Icon name="email" /> Contact {selectedProperty.owner.name.split(' ')[0]}
+                <Icon name="sync_alt" /> Request a swap
               </button>
             </div>
           </div>
